@@ -1,0 +1,38 @@
+配置好各个服务器的NTP时钟
+
+1. mcollective数据传输加密方法
+# cd /etc/mcollective/ssl       //在任意Linux机器上 (推荐redhat6.4以上版本)
+# openssl genrsa -out private_key.pem 1024       //用openssl命令生产私钥 private_key.pem 文件
+# openssl rsa -in private_key.pem -out public_key.pem -outform PEM -pubout       //通过刚生成的私钥生成公钥 public_key.pem 文件
+生成的公钥 public_key.pem 和 私钥 private_key.pem 两个文件必须分发到所有部署mco的设备上 /etc/mcollective/ssl 目录中
+或者 /etc/puppetlabs/mcollective/ssl 目录中
+提示: 本操作是对mco client 到 mco server 之间传输数据进行加密
+
+2. mco client 专用访问证书
+# cd /root/       //在使用mco client的设备上
+# openssl genrsa -out mco-client-private-key.pem 1024       //先用下面命令生产私钥 mco-client-private-key.pem 文件
+# openssl rsa -in mco-client-private-key.pem -out mco-client-public-key.pem -outform PEM -pubout     //通过刚生成的私钥生成公钥 mco-client-public-key.pem 文件  
+# cp /root/mco-client-public-key.pem /etc/mcollective/ssl/client/       //复制公钥文件到所有部署mco设备的/etc/mcollective/ssl/client/中
+上面公钥 mco-client-public-key.pem 到部署mco的设备上的 /etc/mcollective/ssl/client 目录中或者 /etc/puppetlabs/mcollective/ssl/client 目录中
+提示:该对公钥私钥对是对客户端进行认证的秘钥对
+
+3. 修改所有客户端 server.cfg 文件
+securityprovider = ssl    #启用ssl加密
+plugin.ssl_server_private = /etc/mcollective/ssl/private_key.pem   #传输加密私钥位置
+plugin.ssl_server_public  = /etc/mcollective/ssl/public_key.pem    #传输加密公钥位置
+plugin.ssl_client_cert_dir = /etc/mcollective/ssl/clients/           #客户端公钥证书位置
+plugin.ssl.enforce_ttl = 0                                           #允许老客户端连接
+plugin.ssl_serializer = yaml                                         #序列化方法选择yaml
+重启动 mcollective 进程
+
+4. 修改 /etc/mcollective/client.cfg   或者 /etc/puppetlabs/mcollective/client.cfg
+securityprovider = ssl    #启用ssl加密
+plugin.ssl_server_public  = /etc/mcollective/ssl/itaom-public.pem    #传输加密公钥位置
+plugin.ssl_client_private = /root/mco-client-private-key.pem         #客户端私钥证书位置
+plugin.ssl_client_public =  /root/mco-client-public-key.pem          #客户端公钥证书位置
+plugin.ssl_serializer = yaml                                         #序列化方法选择yaml
+重启动 mcollective 进程
+
+4. 客户端进行连接测试
+mco find
+如果显示设备说明加密配置完成
