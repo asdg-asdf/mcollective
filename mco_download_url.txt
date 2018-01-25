@@ -1,0 +1,4 @@
+https://downloads.puppetlabs.com/    windows redhat  suse   download
+Https://yum.puppetlabs.com           linux yum
+
+https://puppet.com/misc/pe-files/previous-releases     企业各个版本下载    包括puppet aix agent 等企业版本软件 注册邮箱即可下载
