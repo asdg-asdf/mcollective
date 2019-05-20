@@ -16,6 +16,6 @@ main_collective = dc01_collective
 
 # mco ping  默认使用 mcollective 进行ping测试
 
-
+shell 插件测试
 # mco rpc shell run command='uname' -T dc01_collective  只在dc01_collective区域内运行
-
+# mco rpc shell run command='uname' -T dc01_collective  -I test01 只在dc01_collective区域内test01运行
