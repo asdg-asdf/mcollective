@@ -1,0 +1,21 @@
+修改mco client.cfg文件collectives行添加需要的名称可多个逗号分隔
+# cat /etc/mcollective/client.cfg 
+collectives = mcollective,dc01_collective,dc02_collective,dc03_collective
+main_collective = mcollective
+
+
+修改mco server.cfg文件collectives行添加需要的名称可多个逗号分隔
+# cat /etc/mcollective/server.cfg 
+collectives = dc01_collective
+main_collective = dc01_collective
+
+
+测试
+# mco ping -T dc01_collective   只能查看到 dc01_collective区域内的设备
+
+
+# mco ping  默认使用 mcollective 进行ping测试
+
+
+# mco rpc shell run command='uname' -T dc01_collective  只在dc01_collective区域内运行
+
