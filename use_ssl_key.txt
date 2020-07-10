@@ -27,7 +27,7 @@ plugin.ssl_serializer = yaml                                         #序列化�
 
 4. 修改 /etc/mcollective/client.cfg   或者 /etc/puppetlabs/mcollective/client.cfg
 securityprovider = ssl    #启用ssl加密
-plugin.ssl_server_public  = /etc/mcollective/ssl/itaom-public.pem    #传输加密公钥位置
+plugin.ssl_server_public  = /etc/mcollective/ssl/public_key.pem    #传输加密公钥位置
 plugin.ssl_client_private = /root/mco-client-private-key.pem         #客户端私钥证书位置
 plugin.ssl_client_public =  /root/mco-client-public-key.pem          #客户端公钥证书位置
 plugin.ssl_serializer = yaml                                         #序列化方法选择yaml
